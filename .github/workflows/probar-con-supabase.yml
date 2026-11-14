@@ -1,0 +1,60 @@
+# Prueba la API conectada a TU proyecto de Supabase (se ejecuta solo a mano, desde la pestaña Actions).
+# Requiere estos secretos del repositorio (Settings > Secrets and variables > Actions):
+#   DB_URL          jdbc:postgresql://<host-del-session-pooler>:5432/postgres?sslmode=require&prepareThreshold=0
+#   DB_USER         postgres.<referencia-del-proyecto>
+#   DB_PASSWORD     contrasena de la base de datos de Supabase
+#   ADMIN_PASSWORD  contrasena del usuario admin@perudeestacion.pe
+# La coleccion crea y luego borra sus propios registros de prueba; solo deja una simulacion nueva.
+name: Probar con Supabase
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probar:
+    runs-on: ubuntu-latest
+    env:
+      DB_URL: ${{ secrets.DB_URL }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      ADMIN_EMAIL: admin@perudeestacion.pe
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      JWT_SECRET: clave-solo-para-esta-prueba-con-mas-de-32-caracteres
+    steps:
+      - name: Revisar secretos
+        run: |
+          faltan=""
+          for v in DB_URL DB_USER DB_PASSWORD ADMIN_PASSWORD; do [ -z "${!v}" ] && faltan="$faltan $v"; done
+          if [ -n "$faltan" ]; then echo "Faltan los secretos:$faltan"; exit 1; fi
+
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Compilar
+        run: ./mvnw -B -ntp -DskipTests package
+
+      - name: Arrancar la API conectada a Supabase
+        run: |
+          java -jar target/perudeestacion-*.jar > arranque.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://localhost:8080/api/v1/departamentos > /dev/null && break; sleep 3; done
+          grep -E "Base de datos|ejecutando|Administrador|No se pudo|Started" arranque.log || true
+          echo "Departamentos devueltos por la API:"
+          curl -sf http://localhost:8080/api/v1/departamentos | python3 -c "import sys,json; print(len(json.load(sys.stdin)))"
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      - name: Coleccion de Postman contra Supabase
+        run: |
+          npx --yes newman@6 run docs/postman/PeruDeEstacion.postman_collection.json \
+            --env-var "adminPassword=${ADMIN_PASSWORD}" --reporters cli
+
+      - name: Registro de la API
+        if: always()
+        run: grep -E "WARN|ERROR|Base de datos|Administrador" arranque.log | cut -c1-250 || true
