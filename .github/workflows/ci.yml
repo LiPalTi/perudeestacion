@@ -68,6 +68,21 @@ jobs:
             --env-var "adminPassword=${ADMIN_PASSWORD}" \
             --reporters cli,junit --reporter-junit-export resultados/newman.xml
 
+      - name: Arranque con la base de datos caida (debe responder 503, no caerse)
+        env:
+          DB_URL: jdbc:postgresql://localhost:5999/postgres
+          PORT: "8081"
+        run: |
+          java -jar target/perudeestacion-*.jar > arranque-3.log 2>&1 &
+          code=000
+          for i in $(seq 1 90); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 40 http://localhost:8081/api/v1/departamentos || true)
+            [ "$code" != "000" ] && break
+            sleep 2
+          done
+          echo "Codigo HTTP con la base caida: $code"
+          test "$code" = "503"
+
       - name: Resumen de los arranques
         if: always()
         run: |
@@ -78,7 +93,7 @@ jobs:
 
       - name: Guardar registros y resultados
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: resultados-pruebas
           path: |
