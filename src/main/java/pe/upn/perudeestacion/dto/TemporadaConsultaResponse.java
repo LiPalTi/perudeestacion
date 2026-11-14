@@ -12,7 +12,7 @@ import pe.upn.perudeestacion.entity.NivelTemporada;
 public record TemporadaConsultaResponse(DepartamentoResponse departamento, int mes, AlertaResponse alertaVigente,
         List<Item> resultados) {
 
-    public record Item(Long alimentoId, String nombre, Categoria categoria, NivelTemporada nivelTemporada,
+    public record Item(Long alimentoId, String nombre, Categoria categoria, String imagenUrl, NivelTemporada nivelTemporada,
             NivelRiesgo riesgoAlza, BigDecimal precioRefKg, String fuentePrecio, LocalDate fechaPrecio) {
     }
 }

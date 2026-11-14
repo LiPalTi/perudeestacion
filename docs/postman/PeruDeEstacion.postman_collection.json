@@ -109,6 +109,7 @@
                   "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
                   "const r = pm.response.json();",
                   "pm.test(\"Trae resultados\", () => pm.expect(r.resultados.length).to.be.above(0));",
+                  "pm.test(\"Cada resultado trae imagenUrl (puede ser null)\", () => pm.expect(r.resultados[0]).to.have.property(\"imagenUrl\"));",
                   "pm.test(\"Ordenado: el primero es ALTA\", () => pm.expect(r.resultados[0].nivelTemporada).to.eql(\"ALTA\"));",
                   "pm.test(\"Incluye alerta El Nino vigente\", () => pm.expect(r.alertaVigente).to.not.be.null);",
                   "pm.test(\"Responde en menos de 1 s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"

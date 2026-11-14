@@ -69,7 +69,8 @@ public class TemporadaService {
                     Long alimentoId = t.getAlimento().getId();
                     PrecioReferencia p = precios.get(alimentoId);
                     return new TemporadaConsultaResponse.Item(alimentoId, t.getAlimento().getNombre(),
-                            t.getAlimento().getCategoria(), t.getNivel(), riesgo.get(alimentoId),
+                            t.getAlimento().getCategoria(), t.getAlimento().getImagenUrl(), t.getNivel(),
+                            riesgo.get(alimentoId),
                             p == null ? null : p.getPrecioKg(), p == null ? null : p.getFuente(),
                             p == null ? null : p.getFecha());
                 })

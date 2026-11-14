@@ -1,0 +1,26 @@
+# Evita que Supabase pause el proyecto del plan gratuito por falta de actividad (7 dias).
+# Hace unas consultas de solo lectura una vez al dia. Para activarlo, crea el secreto del repositorio
+# SUPABASE_DB_URL (Settings > Secrets and variables > Actions) con la cadena de Supabase > Connect >
+# Session pooler en formato URI: postgresql://postgres.<ref>:<contrasena>@<host>:5432/postgres
+name: Mantener Supabase activo
+
+on:
+  schedule:
+    - cron: "17 13 * * *"   # todos los dias a las 08:17 hora de Lima
+  workflow_dispatch:
+
+jobs:
+  consultar:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+    steps:
+      - name: Consultas de lectura
+        if: env.SUPABASE_DB_URL != ''
+        run: |
+          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 \
+            -c "SELECT count(*) AS departamentos FROM departamento;" \
+            -c "SELECT count(*) AS temporadas FROM temporada;"
+      - name: Secreto pendiente
+        if: env.SUPABASE_DB_URL == ''
+        run: echo "Crea el secreto SUPABASE_DB_URL para activar esta tarea."

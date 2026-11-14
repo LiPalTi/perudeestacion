@@ -1,11 +1,16 @@
 package pe.upn.perudeestacion.config;
 
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.List;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,6 +45,8 @@ import com.nimbusds.jose.jwk.source.ImmutableSecret;
  */
 @Configuration
 public class SecurityConfig {
+
+    private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
 
     public static final String API = "/api/v1";
 
@@ -87,11 +94,24 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Clave HS256 de 256 bits. Si JWT_SECRET falta o es corta la app no se detiene: genera una clave temporal
+     * o la deriva con SHA-256, y lo avisa en el log.
+     */
     @Bean
-    public SecretKey jwtSecretKey(@Value("${app.jwt.secret}") String secreto) {
+    public SecretKey jwtSecretKey(@Value("${app.jwt.secret:}") String secreto) {
         byte[] bytes = secreto.getBytes(StandardCharsets.UTF_8);
-        if (bytes.length < 32) {
-            throw new IllegalStateException("JWT_SECRET debe tener al menos 32 caracteres para HS256");
+        if (secreto.isBlank()) {
+            bytes = new byte[32];
+            new SecureRandom().nextBytes(bytes);
+            log.warn("JWT_SECRET no definido: se usa una clave temporal y los tokens dejan de valer al reiniciar");
+        } else if (bytes.length < 32) {
+            try {
+                bytes = MessageDigest.getInstance("SHA-256").digest(bytes);
+            } catch (NoSuchAlgorithmException e) {
+                throw new IllegalStateException(e);
+            }
+            log.warn("JWT_SECRET tiene menos de 32 caracteres: se deriva una clave de 256 bits. Use una clave mas larga");
         }
         return new SecretKeySpec(bytes, "HmacSHA256");
     }
