@@ -31,9 +31,9 @@ jobs:
       ADMIN_EMAIL: admin@perudeestacion.pe
       ADMIN_PASSWORD: ClaveDePrueba2026
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "21"
@@ -58,7 +58,7 @@ jobs:
           for i in $(seq 1 60); do curl -sf http://localhost:8080/api/v1/departamentos > /dev/null && break; sleep 2; done
           curl -sf http://localhost:8080/api/v1/departamentos > /dev/null
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "22"
 
@@ -68,9 +68,17 @@ jobs:
             --env-var "adminPassword=${ADMIN_PASSWORD}" \
             --reporters cli,junit --reporter-junit-export resultados/newman.xml
 
+      - name: Resumen de los arranques
+        if: always()
+        run: |
+          for f in arranque-*.log; do
+            echo "== $f"
+            grep -E "WARN|ERROR|Base de datos|ejecutando|Administrador|Started|Exception" "$f" || true
+          done
+
       - name: Guardar registros y resultados
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: resultados-pruebas
           path: |
