@@ -1,0 +1,19 @@
+clave,valor,descripcion
+FACTOR_ADULTO_MAYOR,0.9000,"Factor preliminar para adultos mayores, a validar con nutricionista"
+FACTOR_NINO,0.7000,"Factor preliminar para ninos, a validar con nutricionista"
+KCAL_KG_ACEITE,8840.0000,"kcal por kg (referencial, validar con Tablas Peruanas INS)"
+KCAL_KG_AZUCAR,3870.0000,"kcal por kg (referencial, validar con Tablas Peruanas INS)"
+KCAL_KG_CEREALES_TUBERCULOS,3500.0000,"kcal por kg (referencial, validar con Tablas Peruanas INS)"
+KCAL_KG_CONSERVAS_PESCADO,1900.0000,"kcal por kg (referencial, validar con Tablas Peruanas INS)"
+KCAL_KG_MENESTRAS,3400.0000,"kcal por kg (referencial, validar con Tablas Peruanas INS)"
+KCAL_PERSONA_DIA,2100.0000,Energia minima por persona y dia (PMA/WFP)
+PRECIO_KG_ACEITE,9.0000,Precio referencial S/ por kg (actualizar)
+PRECIO_KG_AZUCAR,4.0000,Precio referencial S/ por kg (actualizar)
+PRECIO_KG_CEREALES_TUBERCULOS,4.5000,Precio referencial S/ por kg (actualizar)
+PRECIO_KG_CONSERVAS_PESCADO,12.0000,Precio referencial S/ por kg (actualizar)
+PRECIO_KG_MENESTRAS,7.0000,Precio referencial S/ por kg (actualizar)
+P_ACEITE,0.1500,Proporcion de energia: aceite vegetal
+P_AZUCAR,0.0500,Proporcion de energia: azucar
+P_CEREALES_TUBERCULOS,0.5500,Proporcion de energia: cereales y tuberculos
+P_CONSERVAS_PESCADO,0.1000,Proporcion de energia: conservas de pescado
+P_MENESTRAS,0.1500,Proporcion de energia: menestras

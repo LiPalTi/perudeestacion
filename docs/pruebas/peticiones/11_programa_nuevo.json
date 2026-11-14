@@ -1,0 +1,10 @@
+{
+  "nombre": "Programa de prueba",
+  "entidad": "Municipalidad de prueba",
+  "urlOficial": "https://www.gob.pe",
+  "fechaRevision": "2026-11-13",
+  "requisitos": [
+    "DNI del jefe de hogar",
+    "Constancia de empadronamiento"
+  ]
+}

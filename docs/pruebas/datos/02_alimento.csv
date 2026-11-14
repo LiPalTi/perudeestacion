@@ -1,0 +1,13 @@
+id,nombre,categoria,descripcion,imagen_url
+1,Mango,FRUTA,Fruta tropical de la costa norte.,
+2,Limon,FRUTA,Citrico de uso diario; sensible a las lluvias en la costa norte.,
+3,Platano,FRUTA,Fruta de alta disponibilidad en costa norte y selva.,
+4,Uva,FRUTA,Fruta de la costa sur y central.,
+5,Tomate,VERDURA,Hortaliza de alta rotacion en mercados.,
+6,Cebolla roja,VERDURA,Hortaliza basica de la canasta familiar.,
+7,Zanahoria,VERDURA,Hortaliza de raiz.,
+8,Papa amarilla,TUBERCULO,Tuberculo andino.,
+9,Camote,TUBERCULO,Tuberculo de costa.,
+10,Yuca,TUBERCULO,Raiz de selva y costa norte.,
+11,Bonito,PESCADO,Pescado azul del litoral.,
+12,Perico,PESCADO,Pesca artesanal de la costa norte.,

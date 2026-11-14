@@ -1,0 +1,11 @@
+id,alimento,departamento,precio_kg,fecha,fuente,alimento_id,departamento_id
+1,Bonito,LIM,12.50,2026-10-20,Dato de prueba (reemplazar con SISAP-MIDAGRI),11,15
+2,Papa amarilla,LIM,4.60,2026-10-20,Dato de prueba (reemplazar con SISAP-MIDAGRI),8,15
+3,Tomate,LIM,4.10,2026-10-20,Dato de prueba (reemplazar con SISAP-MIDAGRI),5,15
+4,Uva,LIM,6.50,2026-10-20,Dato de prueba (reemplazar con SISAP-MIDAGRI),4,15
+5,Perico,PIU,14.00,2026-10-20,Dato de prueba (reemplazar con SISAP-MIDAGRI),12,20
+6,Cebolla roja,PIU,3.20,2026-10-20,Dato de prueba (reemplazar con SISAP-MIDAGRI),6,20
+7,Tomate,PIU,3.80,2026-10-20,Dato de prueba (reemplazar con SISAP-MIDAGRI),5,20
+8,Platano,PIU,2.20,2026-10-20,Dato de prueba (reemplazar con SISAP-MIDAGRI),3,20
+9,Limon,PIU,6.00,2026-10-20,Dato de prueba (reemplazar con SISAP-MIDAGRI),2,20
+10,Mango,PIU,3.50,2026-10-20,Dato de prueba (reemplazar con SISAP-MIDAGRI),1,20

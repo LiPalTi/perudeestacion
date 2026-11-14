@@ -1,0 +1,13 @@
+{
+  "alertaId": 1,
+  "departamentoId": 15,
+  "sector": "Pesca",
+  "nivelRiesgo": "MEDIO",
+  "descripcion": "Menor disponibilidad de bonito y jurel por el calentamiento del mar",
+  "alimentos": [
+    {
+      "alimentoId": 11,
+      "riesgoAlza": "ALTO"
+    }
+  ]
+}

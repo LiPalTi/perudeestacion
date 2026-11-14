@@ -1,0 +1,5 @@
+id,nombre,programa,departamento,direccion,distrito,telefono,programa_id,departamento_id
+1,ULE - Municipalidad Provincial de Chiclayo,Clasificacion socioeconomica (SISFOH),LAM,Sede de la Municipalidad Provincial de Chiclayo,Chiclayo,,1,14
+2,Oficina de Gestion del Riesgo de Desastres - Piura,Ayuda humanitaria,PIU,Sede de la Municipalidad Provincial de Piura,Piura,,2,20
+3,ULE - Municipalidad Provincial de Piura,Clasificacion socioeconomica (SISFOH),PIU,Sede de la Municipalidad Provincial de Piura,Piura,,1,20
+4,ULE - Municipalidad Provincial de Tumbes,Clasificacion socioeconomica (SISFOH),TUM,Sede de la Municipalidad Provincial de Tumbes,Tumbes,,1,24

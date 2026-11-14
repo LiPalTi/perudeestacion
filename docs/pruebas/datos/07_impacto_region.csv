@@ -1,0 +1,4 @@
+id,alerta_id,departamento,sector,nivel_riesgo,descripcion,departamento_id
+1,1,LAM,Agricultura,ALTO,Lluvias sobre lo normal y caudales altos previstos de noviembre 2026 a enero 2027; riesgo de perdida de cultivos y cortes de vias.,14
+2,1,PIU,Agricultura,ALTO,Lluvias sobre lo normal y caudales altos previstos de noviembre 2026 a enero 2027; riesgo de perdida de cultivos y cortes de vias.,20
+3,1,TUM,Agricultura,ALTO,Lluvias sobre lo normal y caudales altos previstos de noviembre 2026 a enero 2027; riesgo de perdida de cultivos y cortes de vias.,24

@@ -21,7 +21,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * Prepara la base de datos al arrancar, para que un proyecto de Supabase nuevo o restaurado funcione sin pasos
- * manuales: si no existen las tablas ejecuta db/01_esquema.sql y si estan vacias ejecuta db/02_datos_iniciales.sql.
+ * manuales: si no existen las tablas ejecuta db/01_esquema.sql, si estan vacias ejecuta db/02_datos_iniciales.sql
+ * y si no hay simulaciones carga las de ejemplo de db/03_simulaciones_prueba.sql.
  * Cada script corre en una sola transaccion: o se aplica completo o no se aplica nada.
  * Si la base no responde (proyecto pausado, credenciales erroneas) la app arranca igual, registra la causa probable
  * y las peticiones responden 503 hasta que la base vuelva.
@@ -57,6 +58,11 @@ public class BaseDatosInicializador implements ApplicationRunner {
             if (departamentos != null && departamentos == 0) {
                 log.info("Tablas vacias: ejecutando db/02_datos_iniciales.sql");
                 ejecutar("db/02_datos_iniciales.sql");
+            }
+            Integer simulaciones = jdbc.queryForObject("SELECT count(*) FROM simulacion", Integer.class);
+            if (simulaciones != null && simulaciones == 0) {
+                log.info("Sin simulaciones: ejecutando db/03_simulaciones_prueba.sql");
+                ejecutar("db/03_simulaciones_prueba.sql");
             }
             log.info("Base de datos lista");
         } catch (DataAccessException | TransactionException e) {

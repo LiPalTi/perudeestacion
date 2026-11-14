@@ -1,0 +1,6 @@
+id,alimento,metodo,descripcion,duracion_dias,alimento_id
+1,Mango,Maduracion a temperatura ambiente,Madurar fuera de la refrigeradora y refrigerar recien maduro.,5,1
+2,Limon,Refrigeracion,Guardar en bolsa cerrada dentro de la refrigeradora.,21,2
+3,Tomate,Lugar fresco,"Conservar fuera de la refrigeradora hasta madurar, sin apilar.",7,5
+4,Papa amarilla,Lugar oscuro y ventilado,Evitar la luz para que no se ponga verde; no refrigerar.,30,8
+5,Bonito,Congelacion,"Limpiar, porcionar y congelar el mismo dia de la compra.",90,11

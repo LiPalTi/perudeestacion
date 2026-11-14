@@ -1,0 +1,11 @@
+id,programa,orden,descripcion,programa_id
+3,Clasificacion socioeconomica (SISFOH),1,DNI de todos los integrantes del hogar,1
+2,Clasificacion socioeconomica (SISFOH),2,Ultimo recibo de luz,1
+1,Clasificacion socioeconomica (SISFOH),3,Formulario S100 llenado en la ULE,1
+4,Ayuda humanitaria,1,Estar empadronado como damnificado o afectado tras la evaluacion de danos de la municipalidad,2
+7,Bono de Arrendamiento para Emergencias (BAE),1,Vivienda colapsada o inhabitable registrada en el padron de damnificados,3
+6,Bono de Arrendamiento para Emergencias (BAE),2,No tener otra vivienda en la region,3
+5,Bono de Arrendamiento para Emergencias (BAE),3,Residir en un distrito declarado en emergencia,3
+8,Comedores populares (PCA),1,Acudir a un comedor reconocido por la municipalidad del distrito,4
+10,Ollas comunes (PCA),1,Olla comun con un minimo de 15 usuarios,5
+9,Ollas comunes (PCA),2,Los usuarios no deben recibir otro servicio del PCA,5

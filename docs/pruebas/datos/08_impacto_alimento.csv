@@ -1,0 +1,13 @@
+id,impacto_id,departamento,alimento,riesgo_alza,alimento_id
+1,1,LAM,Mango,MEDIO,1
+2,1,LAM,Limon,ALTO,2
+3,1,LAM,Tomate,ALTO,5
+4,1,LAM,Cebolla roja,MEDIO,6
+5,2,PIU,Mango,MEDIO,1
+6,2,PIU,Limon,ALTO,2
+7,2,PIU,Tomate,ALTO,5
+8,2,PIU,Cebolla roja,MEDIO,6
+9,3,TUM,Mango,MEDIO,1
+10,3,TUM,Limon,ALTO,2
+11,3,TUM,Tomate,ALTO,5
+12,3,TUM,Cebolla roja,MEDIO,6

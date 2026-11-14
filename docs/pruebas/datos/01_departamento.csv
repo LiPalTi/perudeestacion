@@ -1,0 +1,26 @@
+id,codigo,nombre,region_natural
+1,AMA,Amazonas,SELVA
+2,ANC,Ancash,SIERRA
+3,APU,Apurimac,SIERRA
+4,ARE,Arequipa,SIERRA
+5,AYA,Ayacucho,SIERRA
+6,CAJ,Cajamarca,SIERRA
+7,CAL,Callao,COSTA
+8,CUS,Cusco,SIERRA
+9,HUV,Huancavelica,SIERRA
+10,HUC,Huanuco,SIERRA
+11,ICA,Ica,COSTA
+12,JUN,Junin,SIERRA
+13,LAL,La Libertad,COSTA
+14,LAM,Lambayeque,COSTA
+15,LIM,Lima,COSTA
+16,LOR,Loreto,SELVA
+17,MDD,Madre de Dios,SELVA
+18,MOQ,Moquegua,SIERRA
+19,PAS,Pasco,SIERRA
+20,PIU,Piura,COSTA
+21,PUN,Puno,SIERRA
+22,SAM,San Martin,SELVA
+23,TAC,Tacna,COSTA
+24,TUM,Tumbes,COSTA
+25,UCA,Ucayali,SELVA

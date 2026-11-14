@@ -50,6 +50,20 @@ jobs:
           curl -sf http://localhost:8080/api/v1/departamentos > /dev/null
           kill "$(cat app.pid)" && sleep 5
 
+      - name: Verificar los datos de prueba cargados
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql -h localhost -U postgres -At -F ' ' -c "
+            SELECT 'departamento', count(*) FROM departamento UNION ALL
+            SELECT 'temporada', count(*) FROM temporada UNION ALL
+            SELECT 'simulacion', count(*) FROM simulacion UNION ALL
+            SELECT 'usuario_admin', count(*) FROM usuario_admin" | tee conteos.txt
+          grep -qx "departamento 25" conteos.txt
+          grep -qx "temporada 360" conteos.txt
+          grep -qx "simulacion 8" conteos.txt
+          grep -qx "usuario_admin 1" conteos.txt
+
       - name: Segundo arranque validando entidades contra las tablas
         env:
           DDL_AUTO: validate
