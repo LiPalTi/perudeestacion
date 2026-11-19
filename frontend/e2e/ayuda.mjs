@@ -52,12 +52,15 @@ export async function escribir(d, css, valor) {
 
 /** Hace clic en un elemento; si un aviso flotante lo tapa, espera a que el aviso desaparezca. */
 export async function pulsar(d, el) {
-  await d.executeScript("arguments[0].scrollIntoView({ block: 'center' })", el);
+  // Bootstrap activa el desplazamiento suave; aqui se desplaza al instante para no pulsar a medio camino.
+  const centrar = () => d.executeScript("arguments[0].scrollIntoView({ block: 'center', behavior: 'instant' })", el);
+  await centrar();
   try {
     await el.click();
   } catch (e) {
     if (!(e instanceof error.ElementClickInterceptedError)) throw e;
     await esperarAusencia(d, '.aviso');
+    await centrar();
     await el.click();
   }
 }
