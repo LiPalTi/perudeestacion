@@ -1,6 +1,6 @@
 // Utilidades comunes de las pruebas de integracion (Angular + API Spring Boot reales).
 // Variables: BASE_URL (por defecto http://localhost:4200), ADMIN_EMAIL, ADMIN_PASSWORD.
-import { Builder, Browser, By, until } from 'selenium-webdriver';
+import { Builder, Browser, By, error, Key, until } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome.js';
 
 export const BASE_URL = process.env.BASE_URL ?? 'http://localhost:4200';
@@ -38,10 +38,34 @@ export async function esperarAusencia(d, css) {
   await d.wait(async () => (await d.findElements(By.css(css))).length === 0, ESPERA, `${css} sigue en la pagina`);
 }
 
-export async function escribir(d, css, valor) {
+/** Borra el campo como lo haria una persona (Ctrl+A y Retroceso), para que Angular reciba el cambio. */
+export async function vaciar(d, css) {
   const el = await elemento(d, css);
-  await el.clear();
+  await el.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.BACK_SPACE);
+  return el;
+}
+
+export async function escribir(d, css, valor) {
+  const el = await vaciar(d, css);
   await el.sendKeys(String(valor));
+}
+
+/** Hace clic en un elemento; si un aviso flotante lo tapa, espera a que el aviso desaparezca. */
+export async function pulsar(d, el) {
+  await d.executeScript("arguments[0].scrollIntoView({ block: 'center' })", el);
+  try {
+    await el.click();
+  } catch (e) {
+    if (!(e instanceof error.ElementClickInterceptedError)) throw e;
+    await esperarAusencia(d, '.aviso');
+    await el.click();
+  }
+}
+
+/** Busca un boton dentro de la fila de la tabla con ese nombre y lo pulsa. */
+export async function pulsarEnFila(d, nombre, cssBoton) {
+  const fila = await elemento(d, `tr[data-nombre="${nombre}"]`);
+  await pulsar(d, await fila.findElement(By.css(cssBoton)));
 }
 
 /** Elige en un <select> la opcion cuyo texto visible coincide. */
@@ -53,7 +77,7 @@ export async function seleccionar(d, css, texto) {
 }
 
 export async function clic(d, css) {
-  await (await elemento(d, css)).click();
+  await pulsar(d, await elemento(d, css));
 }
 
 export async function ingresar(d) {

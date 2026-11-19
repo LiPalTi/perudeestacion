@@ -1,7 +1,7 @@
 // Autenticacion (JWT) y CRUD completo de alimentos y temporadas desde el panel de administracion.
 import { after, before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { abrirNavegador, ADMIN_EMAIL, By, clic, elemento, escribir, esperarAusencia, esperarTexto, ingresar, ir, seleccionar } from './ayuda.mjs';
+import { abrirNavegador, ADMIN_EMAIL, clic, elemento, escribir, esperarAusencia, esperarTexto, ingresar, ir, pulsarEnFila, seleccionar, vaciar } from './ayuda.mjs';
 
 const NOMBRE = `Aguaymanto e2e ${Date.now() % 100000}`;
 const fila = (nombre) => `tr[data-nombre="${nombre}"]`;
@@ -22,7 +22,7 @@ describe('Autenticacion y autorizacion', () => {
     await escribir(d, '#login-password', 'ClaveIncorrecta');
     await clic(d, '#btn-ingresar');
     await elemento(d, '#error-login');
-    assert.equal((await d.findElements(By.css('#nav-admin'))).length, 0);
+    assert.equal((await d.findElements({ css: '#nav-admin' })).length, 0);
   });
 
   it('con credenciales validas entra y vuelve a la pagina pedida', async () => {
@@ -61,7 +61,7 @@ describe('CRUD de alimentos y temporadas', () => {
     await escribir(d, '#ali-nombre', NOMBRE);
     await seleccionar(d, '#ali-categoria', 'Frutas');
     await escribir(d, '#ali-descripcion', 'Creado por la prueba de integracion');
-    await (await elemento(d, '#ali-imagen')).clear();
+    await vaciar(d, '#ali-imagen');
     await clic(d, '#btn-guardar-alimento');
     await esperarAusencia(d, '#form-alimento');
     await elemento(d, fila(NOMBRE));
@@ -76,7 +76,7 @@ describe('CRUD de alimentos y temporadas', () => {
   });
 
   it('edita el alimento (PUT 200)', async () => {
-    await (await elemento(d, fila(NOMBRE))).findElement(By.css('.btn-editar')).click();
+    await pulsarEnFila(d, NOMBRE, '.btn-editar');
     await escribir(d, '#ali-descripcion', 'Descripcion editada');
     await clic(d, '#btn-guardar-alimento');
     await esperarAusencia(d, '#form-alimento');
@@ -104,7 +104,7 @@ describe('CRUD de alimentos y temporadas', () => {
   });
 
   it('edita el nivel de la temporada (PUT 200)', async () => {
-    await (await elemento(d, fila(NOMBRE))).findElement(By.css('.btn-editar')).click();
+    await pulsarEnFila(d, NOMBRE, '.btn-editar');
     await seleccionar(d, '#tem-nivel', 'MEDIA');
     await clic(d, '#btn-guardar-temporada');
     await esperarAusencia(d, '#form-temporada');
@@ -112,15 +112,15 @@ describe('CRUD de alimentos y temporadas', () => {
   });
 
   it('elimina la temporada con confirmacion (DELETE 204)', async () => {
-    await (await elemento(d, fila(NOMBRE))).findElement(By.css('.btn-eliminar')).click();
-    await (await elemento(d, fila(NOMBRE))).findElement(By.css('.btn-confirmar')).click();
+    await pulsarEnFila(d, NOMBRE, '.btn-eliminar');
+    await pulsarEnFila(d, NOMBRE, '.btn-confirmar');
     await esperarAusencia(d, fila(NOMBRE));
   });
 
   it('elimina el alimento con confirmacion (DELETE 204)', async () => {
     await ir(d, '/admin/alimentos');
-    await (await elemento(d, fila(NOMBRE))).findElement(By.css('.btn-eliminar')).click();
-    await (await elemento(d, fila(NOMBRE))).findElement(By.css('.btn-confirmar')).click();
+    await pulsarEnFila(d, NOMBRE, '.btn-eliminar');
+    await pulsarEnFila(d, NOMBRE, '.btn-confirmar');
     await esperarAusencia(d, fila(NOMBRE));
   });
 });
