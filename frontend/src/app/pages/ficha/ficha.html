@@ -1,0 +1,60 @@
+<div class="container-xl py-4">
+  <nav class="small mb-3" aria-label="Ruta"><a routerLink="/">Volver a la consulta</a></nav>
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert" id="error-ficha">{{ error() }}</div>
+  }
+
+  @if (ficha(); as f) {
+    <div class="row g-4">
+      <div class="col-12 col-md-5 col-lg-4">
+        <div class="tarjeta-imagen rounded-4 overflow-hidden">
+          <app-imagen-alimento [nombre]="f.alimento.nombre" [imagenUrl]="f.alimento.imagenUrl" />
+        </div>
+      </div>
+      <div class="col-12 col-md-7 col-lg-8 d-flex flex-column gap-3">
+        <div>
+          <div class="small fw-semibold texto-suave text-uppercase">{{ f.alimento.categoria }}</div>
+          <h1 class="display-6 mb-2" id="nombre-ficha">{{ f.alimento.nombre }}</h1>
+          @if (f.alimento.descripcion) { <p class="mb-2">{{ f.alimento.descripcion }}</p> }
+          <app-nivel [valor]="nivelActual()" [prefijo]="'Temporada en ' + meses[seleccion.mes() - 1].toLowerCase() + ':'" />
+        </div>
+
+        <div class="panel d-flex flex-wrap justify-content-between align-items-center gap-2">
+          @if (precio(); as p) {
+            <div class="fs-3 fw-bold">{{ p.precioKg | currency: 'PEN' : 'S/ ' }} <span class="fs-6 fw-normal texto-suave">por kg</span></div>
+            <div class="small texto-suave text-end">{{ p.departamento }} · {{ p.fuente }}<br>{{ p.fecha | date: 'd MMM y' }}</div>
+          } @else {
+            <div class="texto-suave">Aún no hay precio de referencia para este alimento.</div>
+          }
+        </div>
+
+        @if (calendario(); as cal) {
+          <section>
+            <h2 class="h5">Calendario en {{ cal.departamento }}</h2>
+            <div class="calendario" id="calendario">
+              @for (m of cal.meses; track m.mes) {
+                <div class="mes" [class.mes-alta]="m.nivel === 'ALTA'" [class.mes-media]="m.nivel === 'MEDIA'"
+                     [class.mes-baja]="m.nivel === 'BAJA'" [class.mes-sin]="!m.nivel" [class.mes-actual]="m.mes === seleccion.mes()">
+                  {{ meses[m.mes - 1].substring(0, 3) }}<small>{{ m.nivel ? m.nivel.charAt(0) + m.nivel.slice(1).toLowerCase() : '—' }}</small>
+                </div>
+              }
+            </div>
+          </section>
+        }
+
+        @if (f.consejos.length) {
+          <section class="panel">
+            <h2 class="h5">Cómo conservarlo</h2>
+            @for (c of f.consejos; track $index) {
+              <p class="mb-1"><strong>{{ c.metodo }}.</strong> {{ c.descripcion }}
+                @if (c.duracionDias) { <span class="texto-suave">Dura hasta {{ c.duracionDias }} días.</span> }</p>
+            }
+          </section>
+        }
+      </div>
+    </div>
+  } @else if (!error()) {
+    <div class="text-center py-5"><div class="spinner-border text-success" role="status"><span class="visually-hidden">Cargando</span></div></div>
+  }
+</div>

@@ -1,0 +1,16 @@
+Coloca aqui las imagenes de los alimentos, una por alimento.
+
+Nombre del archivo: el nombre del alimento en minusculas, sin tildes y con guiones en lugar de espacios.
+Formatos aceptados: .webp, .jpg o .png (se busca en ese orden).
+
+Ejemplos:
+  Mango          -> mango.webp
+  Platano        -> platano.jpg
+  Cebolla roja   -> cebolla-roja.webp
+  Papa amarilla  -> papa-amarilla.png
+  Limon          -> limon.webp
+
+Recomendado: imagen cuadrada de 600 x 600 px, menos de 150 KB.
+Si un alimento tiene una URL en el campo "URL de imagen" del panel de administracion, se usa esa URL primero.
+
+Ejemplo incluido: mango.webp (dibujo simple de prueba). Reemplazalo por una foto propia con el mismo nombre.

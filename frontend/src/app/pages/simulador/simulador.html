@@ -1,0 +1,106 @@
+<div class="container-xl py-4">
+  <h1 class="h2">Simulador de ración mínima</h1>
+  <p class="texto-suave">Calcula cuánto alimento básico necesita tu hogar para una emergencia. No pedimos nombre ni DNI.</p>
+
+  <div class="row g-4">
+    <div class="col-12 col-lg-5">
+      <form class="panel d-flex flex-column gap-3" [formGroup]="form" (ngSubmit)="calcular()" novalidate id="form-simulador">
+        <div>
+          <label for="sim-departamento" class="form-label fw-semibold">Departamento</label>
+          <select id="sim-departamento" class="form-select" formControlName="departamento">
+            @for (d of departamentos(); track d.codigo) { <option [value]="d.codigo">{{ d.nombre }}</option> }
+          </select>
+        </div>
+        <div class="row g-2">
+          <div class="col-4">
+            <label for="sim-adultos" class="form-label fw-semibold">Adultos</label>
+            <input id="sim-adultos" type="number" class="form-control" formControlName="adultos"
+                   [class.is-invalid]="mensaje(form.controls.adultos)">
+            <div class="invalid-feedback">{{ mensaje(form.controls.adultos) }}</div>
+          </div>
+          <div class="col-4">
+            <label for="sim-ninos" class="form-label fw-semibold">Niños</label>
+            <input id="sim-ninos" type="number" class="form-control" formControlName="ninos"
+                   [class.is-invalid]="mensaje(form.controls.ninos)">
+            <div class="invalid-feedback">{{ mensaje(form.controls.ninos) }}</div>
+          </div>
+          <div class="col-4">
+            <label for="sim-mayores" class="form-label fw-semibold">Mayores</label>
+            <input id="sim-mayores" type="number" class="form-control" formControlName="adultosMayores"
+                   [class.is-invalid]="mensaje(form.controls.adultosMayores)">
+            <div class="invalid-feedback">{{ mensaje(form.controls.adultosMayores) }}</div>
+          </div>
+          @if (form.errors?.['sinPersonas'] && form.touched) {
+            <div class="col-12 small text-danger" id="error-personas">Debe haber al menos una persona en el hogar.</div>
+          }
+        </div>
+        <div>
+          <label for="sim-dias" class="form-label fw-semibold">Días de reserva</label>
+          <input id="sim-dias" type="number" class="form-control" formControlName="dias"
+                 [class.is-invalid]="mensaje(form.controls.dias)" aria-describedby="ayuda-dias">
+          <div class="invalid-feedback" id="error-dias">{{ mensaje(form.controls.dias) }}</div>
+          <div class="form-text" id="ayuda-dias">Entre 3 y 30 días. El INDECI recomienda una reserva de al menos 3.</div>
+        </div>
+        <div>
+          <label for="sim-vivienda" class="form-label fw-semibold">Tipo de vivienda</label>
+          <select id="sim-vivienda" class="form-select" formControlName="tipoVivienda">
+            @for (v of viviendas; track v.valor) { <option [value]="v.valor">{{ v.texto }}</option> }
+          </select>
+        </div>
+        <fieldset>
+          <legend class="form-label fw-semibold fs-6">Capacidad económica</legend>
+          <div class="filtros d-flex gap-2">
+            @for (c of capacidades; track c) {
+              <input type="radio" class="btn-check" formControlName="capacidadEconomica" [value]="c" [id]="'cap-' + c">
+              <label class="btn flex-fill" [for]="'cap-' + c">{{ c.charAt(0) + c.slice(1).toLowerCase() }}</label>
+            }
+          </div>
+        </fieldset>
+        @if (errorGeneral()) { <div class="alert alert-danger mb-0" role="alert" id="error-simulador">{{ errorGeneral() }}</div> }
+        <button type="submit" class="btn btn-pe btn-lg" id="btn-calcular" [disabled]="enviando()">
+          {{ enviando() ? 'Calculando...' : 'Calcular' }}
+        </button>
+      </form>
+    </div>
+
+    <div class="col-12 col-lg-7">
+      @if (resultado(); as r) {
+        <section class="panel" id="resultado-simulacion">
+          <div class="row g-3 mb-3">
+            <div class="col-6"><div class="small texto-suave">Energía total</div>
+              <div class="fs-3 fw-bold" id="kcal-total">{{ r.kcalTotal | number }} kcal</div></div>
+            <div class="col-6"><div class="small texto-suave">Costo estimado</div>
+              <div class="fs-3 fw-bold text-success" id="costo-total">{{ r.costoTotalEstimado | currency: 'PEN' : 'S/ ' }}</div></div>
+          </div>
+          <div class="table-responsive">
+            <table class="table mb-3">
+              <thead><tr><th>Grupo de alimentos</th><th class="text-end">Cantidad</th><th class="text-end">Costo</th></tr></thead>
+              <tbody>
+                @for (g of r.lista; track g.grupo) {
+                  <tr><td>{{ nombreGrupo(g.grupo) }}</td><td class="text-end">{{ g.kg | number: '1.2-2' }} kg</td>
+                    <td class="text-end">{{ g.costoEstimado | currency: 'PEN' : 'S/ ' }}</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <h2 class="h6">Recomendaciones</h2>
+          <ul>@for (t of r.recomendaciones; track $index) { <li>{{ t }}</li> }</ul>
+          @if (r.apoyo.length) {
+            <h2 class="h6">Programas a los que puedes acudir</h2>
+            <ul class="mb-2">
+              @for (a of r.apoyo; track a.programaId) {
+                <li>{{ a.programa }} @if (a.centrosEnDepartamento) { <span class="texto-suave">({{ a.centrosEnDepartamento }} centro(s) en tu departamento)</span> }</li>
+              }
+            </ul>
+            <a routerLink="/apoyo">Ver requisitos</a>
+          }
+          <p class="small texto-suave mt-3 mb-0">Simulación N.° {{ r.simulacionId }}. Cálculo con 2 100 kcal por persona al día (PMA); cantidades referenciales.</p>
+        </section>
+      } @else {
+        <div class="panel texto-suave h-100 d-flex align-items-center justify-content-center text-center">
+          Completa el formulario y pulsa Calcular para ver la lista de alimentos y su costo.
+        </div>
+      }
+    </div>
+  </div>
+</div>

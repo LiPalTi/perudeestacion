@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Sin imagen">
+  <rect width="400" height="400" fill="#ECE9DF"/>
+  <g fill="none" stroke="#A8A493" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M200 120c-40 30-60 70-60 110a60 60 0 0 0 120 0c0-40-20-80-60-110z"/>
+    <path d="M200 120v170"/>
+  </g>
+  <text x="200" y="345" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#6B6A60">Agrega tu imagen</text>
+</svg>

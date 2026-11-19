@@ -1,0 +1,57 @@
+<section class="portada portada-naranja py-4 py-md-5">
+  <div class="container-xl">
+    <div class="small fw-semibold text-uppercase" style="color:#fbd9c2">Módulo piloto · Tumbes, Piura y Lambayeque</div>
+    @if (alerta(); as a) {
+      <h1 class="display-6 my-2">{{ a.estado }}</h1>
+      <p class="mb-0" style="color:#fbd9c2">Comunicado {{ a.comunicado }} · {{ a.fecha | date: 'd MMMM y' }} · Magnitud {{ a.magnitud.toLowerCase() }}</p>
+    } @else {
+      <h1 class="display-6 my-2">Sin alerta vigente</h1>
+      <p class="mb-0" style="color:#fbd9c2">Cuando el ENFEN emita una alerta aparecerá aquí.</p>
+    }
+  </div>
+</section>
+
+<div class="container-xl py-4">
+  @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+
+  <div class="filtros d-flex flex-wrap gap-2 mb-4" role="group" aria-label="Departamento">
+    @for (d of piloto; track d.codigo) {
+      <input type="radio" class="btn-check" name="dep-nino" [id]="'nino-' + d.codigo" [checked]="elegido() === d.codigo" (change)="elegir(d.codigo)">
+      <label class="btn px-3" [for]="'nino-' + d.codigo">{{ d.nombre }}</label>
+    }
+  </div>
+
+  <div class="row g-4">
+    <div class="col-12 col-lg-7">
+      <h2 class="h4">Impactos previstos</h2>
+      @for (i of detalle()?.impactos ?? []; track i.id) {
+        <article class="panel mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h3 class="h6 mb-0">Sector: {{ i.sector }}</h3>
+            <app-nivel [valor]="i.nivelRiesgo" prefijo="Riesgo" />
+          </div>
+          <p class="mb-3">{{ i.descripcion }}</p>
+          <h4 class="h6">Alimentos que pueden subir de precio</h4>
+          <ul class="list-group">
+            @for (a of i.alimentos; track a.alimentoId) {
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a [routerLink]="['/alimentos', a.alimentoId]">{{ a.alimento }}</a>
+                <app-nivel [valor]="a.riesgoAlza" />
+              </li>
+            }
+          </ul>
+        </article>
+      } @empty {
+        <div class="panel texto-suave">No hay impactos registrados para este departamento.</div>
+      }
+    </div>
+    <div class="col-12 col-lg-5">
+      <div class="panel d-flex flex-column gap-2">
+        <h2 class="h5">Prepárate</h2>
+        <a routerLink="/simulador" class="btn btn-pe">Calcular mi reserva de alimentos</a>
+        <a routerLink="/apoyo" class="btn btn-pe-outline">Ver programas de apoyo</a>
+        <p class="small texto-suave mb-0">Fuente: comunicados oficiales del ENFEN.</p>
+      </div>
+    </div>
+  </div>
+</div>

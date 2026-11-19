@@ -1,0 +1,91 @@
+<section class="portada py-4 py-md-5">
+  <div class="container-xl">
+    <h1 class="display-6 mb-3">¿Qué está en temporada en tu departamento?</h1>
+    <form class="row g-2 align-items-end" (ngSubmit)="buscar()">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <label for="sel-departamento" class="form-label">Departamento</label>
+        <select id="sel-departamento" name="departamento" class="form-select form-select-lg" [(ngModel)]="departamento">
+          @for (d of departamentos(); track d.codigo) {
+            <option [value]="d.codigo">{{ d.nombre }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+        <label for="sel-mes" class="form-label">Mes</label>
+        <select id="sel-mes" name="mes" class="form-select form-select-lg" [(ngModel)]="mes">
+          @for (m of meses; track m; let i = $index) {
+            <option [value]="i + 1">{{ m }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-12 col-md-auto">
+        <button id="btn-buscar" type="submit" class="btn btn-pe-claro btn-lg w-100 px-4">Buscar</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<div class="container-xl py-4">
+  @if (consulta()?.alertaVigente; as alerta) {
+    <div class="aviso-nino p-3 mb-4 d-flex flex-wrap gap-2 justify-content-between align-items-center" id="aviso-nino">
+      <span><strong>Alerta de El Niño Costero en {{ consulta()!.departamento.nombre }}</strong> ·
+        Magnitud {{ alerta.magnitud.toLowerCase() }} ({{ alerta.comunicado }}). Algunos alimentos pueden subir de precio.</span>
+      <a routerLink="/el-nino">Ver impactos</a>
+    </div>
+  }
+
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+    <h2 class="h3 mb-0" id="titulo-consulta">
+      @if (consulta(); as c) { {{ c.departamento.nombre }} · {{ meses[c.mes - 1] }}
+        <small class="texto-suave fs-6 fw-normal">({{ c.resultados.length }} alimentos)</small> }
+      @else { Alimentos de temporada }
+    </h2>
+    <div class="filtros d-flex flex-wrap gap-2" role="group" aria-label="Filtrar por categoría">
+      <input type="radio" class="btn-check" name="categoria" id="cat-todos" [checked]="categoria() === null" (change)="filtrar(null)">
+      <label class="btn btn-sm px-3" for="cat-todos">Todos</label>
+      @for (c of categorias; track c.valor) {
+        <input type="radio" class="btn-check" name="categoria" [id]="'cat-' + c.valor" [checked]="categoria() === c.valor" (change)="filtrar(c.valor)">
+        <label class="btn btn-sm px-3" [for]="'cat-' + c.valor">{{ c.texto }}</label>
+      }
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert" id="error-consulta">{{ error() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="text-center py-5"><div class="spinner-border text-success" role="status"><span class="visually-hidden">Cargando</span></div></div>
+  } @else if (consulta(); as c) {
+    @if (c.resultados.length === 0) {
+      <div class="panel text-center texto-suave" id="sin-resultados">
+        No hay datos de temporada para esta búsqueda. Los datos de prueba incluyen Piura, Tumbes, Lambayeque y Lima.
+      </div>
+    } @else {
+      <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-3" id="rejilla">
+        @for (item of c.resultados; track item.alimentoId) {
+          <div class="col">
+            <a class="tarjeta" [routerLink]="['/alimentos', item.alimentoId]" [attr.data-alimento]="item.nombre">
+              <div class="tarjeta-imagen">
+                <app-imagen-alimento [nombre]="item.nombre" [imagenUrl]="item.imagenUrl" />
+                @if (item.riesgoAlza === 'ALTO' || item.riesgoAlza === 'MEDIO') {
+                  <span class="marca-riesgo">Puede subir</span>
+                }
+              </div>
+              <div class="p-2 px-3 d-flex flex-column gap-1">
+                <span class="fw-semibold nombre-alimento">{{ item.nombre }}</span>
+                <span class="d-flex justify-content-between align-items-center gap-1">
+                  <app-nivel [valor]="item.nivelTemporada" />
+                  <small class="texto-suave">
+                    @if (item.precioRefKg !== null) { {{ item.precioRefKg | currency: 'PEN' : 'S/ ' }}/kg } @else { Sin precio }
+                  </small>
+                </span>
+              </div>
+            </a>
+          </div>
+        }
+      </div>
+      <p class="small texto-suave mt-3 mb-0">Temporada alta: más oferta y mejor precio. Baja: compra lo justo o sustituye.</p>
+    }
+  }
+</div>

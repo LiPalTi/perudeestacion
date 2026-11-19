@@ -1,18 +1,22 @@
-# Perú de Estación: API REST (entrega T1)
+# Perú de Estación: API REST y frontend Angular (entrega T1)
 
 [![CI](https://github.com/LiPalTi/perudeestacion/actions/workflows/ci.yml/badge.svg)](https://github.com/LiPalTi/perudeestacion/actions/workflows/ci.yml)
 
 API REST en Spring Boot con base de datos PostgreSQL en Supabase. Indica qué alimentos están en temporada por departamento y mes, e incluye el módulo piloto El Niño (Tumbes, Piura y Lambayeque), un simulador de ración mínima y un directorio de programas de apoyo.
 
-Este repositorio es el backend que consume el frontend Angular. Para la evaluación T1 (integración frontend-backend) reúne:
+El repositorio tiene el backend (raíz) y el frontend Angular (carpeta [`frontend/`](frontend/README.md)). Para la evaluación T1 (integración frontend-backend) reúne:
 
 | Exigencia de T1 | Dónde está |
 |---|---|
-| API REST que consume Angular | 40 operaciones bajo `/api/v1` (sección Endpoints) |
+| Angular consumiendo la API Spring Boot | Carpeta `frontend/`: 8 pantallas que usan la API (sección Frontend Angular) |
+| Flujo CRUD funcional | Panel de administración: alimentos y temporadas (crear, listar, editar, eliminar) |
+| Validaciones | Formularios Angular con las mismas reglas del backend y mensajes de error de la API por campo |
+| Autenticación y autorización | Login con JWT, interceptor que envía el token, rutas `/admin` protegidas y escrituras solo con rol ADMIN |
+| API REST | 40 operaciones bajo `/api/v1` (sección Endpoints) |
 | Endpoints protegidos | Login con JWT y escrituras solo con rol ADMIN (sección Autenticación) |
 | Manejo de errores | Formato único ProblemDetail con detalle por campo (sección Errores) |
 | Validación de formularios | Reglas del backend que el formulario Angular debe replicar (sección Validaciones) |
-| Pruebas de integración | Colección de Postman de 38 peticiones e integración continua en cada cambio |
+| Pruebas de integración | Pruebas Selenium del frontend contra la API real, colección de Postman de 38 peticiones e integración continua en cada cambio |
 | Datos para pruebas | Carpeta `docs/pruebas` y carga automática en la base |
 | Documentación de consumo | Este archivo |
 
@@ -27,6 +31,27 @@ Necesitas Java 21 o superior, una base PostgreSQL (un proyecto gratuito de Supab
 5. **Probar.** En Postman importa la colección `docs/postman/PeruDeEstacion.postman_collection.json` y el entorno `docs/postman/PeruDeEstacion.postman_environment.json`. Elige el entorno "Peru de Estacion - local" y pulsa Run collection: deben pasar las 38 peticiones.
 
 No hace falta crear tablas ni cargar datos a mano. Si la base está vacía, la aplicación crea las 14 tablas y carga los datos de prueba al arrancar. También sirve cualquier PostgreSQL local: en ese caso, `DB_URL=jdbc:postgresql://localhost:5432/postgres`.
+
+## Frontend Angular
+
+Con la API corriendo, en otra terminal:
+
+```
+cd frontend
+npm install
+npm start
+```
+
+Abre `http://localhost:4200` (necesitas Node.js 22 o superior). Para el panel de administración pulsa Ingresar y usa el usuario de prueba.
+
+| Pantalla | Qué muestra |
+|---|---|
+| Temporada (`/`) | Alimentos en temporada por departamento y mes, con precio y filtro por categoría |
+| Ficha (`/alimentos/:id`) | Precio, calendario de 12 meses y cómo conservarlo |
+| El Niño, Simulador y Apoyo | Módulo piloto, ración mínima del hogar y programas del Estado |
+| Administración (`/admin`) | CRUD de alimentos y temporadas; solo con sesión iniciada |
+
+**Imágenes.** La forma más sencilla de poner o cambiar la imagen de un alimento es copiar el archivo en `frontend/public/img/alimentos/` con el nombre del alimento en minúsculas, sin tildes y con guiones (`mango.webp`, `cebolla-roja.jpg`). La otra es pegar un enlace en el campo "URL de imagen" del panel de administración. Hay un ejemplo incluido (`mango.webp`) y el detalle está en [`frontend/README.md`](frontend/README.md).
 
 ## Datos para pruebas
 
@@ -173,8 +198,9 @@ Crear responde 201 con la cabecera `Location`, actualizar responde 200 y elimina
 
 | Prueba | Cómo se ejecuta | Qué cubre |
 |---|---|---|
+| Frontend con Selenium | `npm run test:e2e` en `frontend/` | Consulta y filtros, ficha, simulador (validaciones y cálculo), ruta protegida, login fallido y correcto, CRUD de alimentos y temporadas con duplicados (409) |
 | Colección de Postman | Postman, Run collection | 38 peticiones y 69 aserciones: consultas, login, CRUD con token, validaciones (400), sin token (401), no encontrado (404), duplicados (409), simulador y CORS |
-| Integración continua | Automática en cada cambio (pestaña Actions) | Compila, crea una base PostgreSQL limpia, carga los datos de prueba, comprueba que las entidades coinciden con las tablas, corre la colección de Postman y verifica que con la base caída la API responde 503 |
+| Integración continua | Automática en cada cambio (pestaña Actions) | Compila, crea una base PostgreSQL limpia, carga los datos de prueba, comprueba que las entidades coinciden con las tablas, compila Angular, corre las pruebas Selenium y la colección de Postman, y verifica que con la base caída la API responde 503 |
 | Prueba unitaria | `./mvnw test` | Validaciones del simulador |
 
 ## Si algo falla
@@ -186,7 +212,8 @@ La consola indica la causa probable de los errores de conexión. Los casos que p
 | La API responde 503 y la consola dice "No hay conexión con Supabase" | En Supabase pulsa Resume project y vuelve a probar |
 | La consola menciona el usuario o la contraseña | Revisa `DB_USER` (debe ser `postgres.<ref>`) y `DB_PASSWORD` en `.env` |
 | `Could not resolve placeholder 'DB_URL'` | El archivo `.env` debe estar junto al `pom.xml` |
-| El puerto 8080 está ocupado | Agrega `PORT=8081` al `.env` y cambia `baseUrl` en el entorno de Postman |
+| El puerto 8080 está ocupado | Agrega `PORT=8081` al `.env` y cambia `baseUrl` en el entorno de Postman y `apiUrl` en `frontend/src/environments/environment.ts` |
+| El frontend muestra "No se puede conectar con la API" | La API no está corriendo o usa otro puerto; revisa la terminal del backend |
 
 ## Estructura del proyecto
 
@@ -203,6 +230,7 @@ perudeestacion/
     security/      login, tokens y administrador inicial
     service/       reglas de negocio
   src/main/resources/db/   esquema y datos de prueba (01, 02 y 03)
+  frontend/        aplicación Angular (pantallas, panel de administración, imágenes y pruebas Selenium)
   docs/pruebas/    datos en CSV, peticiones de ejemplo y script de reinicio
   docs/postman/    colección y entorno de pruebas
   docs/gestion/    backlog y plan del proyecto

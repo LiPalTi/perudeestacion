@@ -1,0 +1,23 @@
+<div class="container py-5" style="max-width: 440px">
+  <h1 class="h3 mb-1">Ingresar</h1>
+  <p class="texto-suave">Acceso para administradores del contenido.</p>
+  @if (expirado()) {
+    <div class="alert alert-warning" role="alert" id="aviso-expirado">Tu sesión venció. Vuelve a ingresar.</div>
+  }
+  <form class="panel d-flex flex-column gap-3" [formGroup]="form" (ngSubmit)="ingresar()" novalidate id="form-login">
+    <div>
+      <label for="login-email" class="form-label fw-semibold">Correo</label>
+      <input id="login-email" type="email" class="form-control" formControlName="email" autocomplete="username"
+             [class.is-invalid]="mensaje(form.controls.email)">
+      <div class="invalid-feedback">{{ mensaje(form.controls.email) }}</div>
+    </div>
+    <div>
+      <label for="login-password" class="form-label fw-semibold">Contraseña</label>
+      <input id="login-password" type="password" class="form-control" formControlName="password" autocomplete="current-password"
+             [class.is-invalid]="mensaje(form.controls.password)">
+      <div class="invalid-feedback">{{ mensaje(form.controls.password) }}</div>
+    </div>
+    @if (error()) { <div class="alert alert-danger mb-0" role="alert" id="error-login">{{ error() }}</div> }
+    <button type="submit" class="btn btn-pe" id="btn-ingresar" [disabled]="enviando()">{{ enviando() ? 'Ingresando...' : 'Ingresar' }}</button>
+  </form>
+</div>

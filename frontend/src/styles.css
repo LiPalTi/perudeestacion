@@ -1,0 +1,105 @@
+/* Estilos globales de Perú de Estación (sobre Bootstrap 5.3).
+   Para cambiar los colores de toda la app basta con editar las variables de :root. */
+:root {
+  --pe-verde: #1e6b43;
+  --pe-verde-oscuro: #154d30;
+  --pe-verde-suave: #e3f1e8;
+  --pe-tinta: #1c2b22;
+  --pe-gris: #5b6660;
+  --pe-fondo: #faf8f2;
+  --pe-borde: #e4e1d6;
+  --pe-naranja: #b5470f;
+  --pe-naranja-suave: #fdebdd;
+  --pe-ambar-suave: #fcefd6;
+  --pe-ambar-texto: #6e4304;
+  --bs-body-font-family: Inter, system-ui, sans-serif;
+  --bs-body-color: var(--pe-tinta);
+  --bs-body-bg: var(--pe-fondo);
+  --bs-link-color-rgb: 30, 107, 67;
+  --bs-link-hover-color-rgb: 21, 77, 48;
+}
+
+app-root { min-height: 100vh; display: flex; flex-direction: column; }
+main { flex: 1; }
+h1, h2, h3, .marca { font-family: 'Bricolage Grotesque', Inter, sans-serif; font-weight: 700; }
+
+/* Barra superior */
+.barra { background: #fff; border-bottom: 1px solid var(--pe-borde); }
+.marca { font-size: 1.5rem; color: var(--pe-verde); text-decoration: none; }
+.menu { display: flex; align-items: center; gap: 1.5rem; }
+.menu a:not(.btn) { color: #3a4740; text-decoration: none; font-weight: 500; padding: .5rem 0; border-bottom: 2px solid transparent; }
+.menu a.activo { color: var(--pe-verde); border-bottom-color: var(--pe-verde); }
+@media (max-width: 991.98px) {
+  .menu { display: none; width: 100%; flex-direction: column; align-items: flex-start; gap: .25rem; padding: .5rem 0; }
+  .menu.abierto { display: flex; }
+}
+
+/* Botones propios (verde del proyecto) */
+.btn-pe { background: var(--pe-verde); color: #fff; border: 1px solid var(--pe-verde); font-weight: 600; }
+.btn-pe:hover, .btn-pe:focus-visible { background: var(--pe-verde-oscuro); border-color: var(--pe-verde-oscuro); color: #fff; }
+.btn-pe-outline { background: #fff; color: var(--pe-tinta); border: 1px solid #c9c6ba; font-weight: 500; }
+.btn-pe-outline:hover { border-color: var(--pe-tinta); }
+.btn-pe-claro { background: transparent; color: #fff; border: 2px solid #fff; font-weight: 600; }
+.btn-pe-claro:hover { background: rgba(255, 255, 255, .15); color: #fff; }
+
+/* Filtros de categoria (botones btn-check de Bootstrap) */
+.filtros .btn { border: 1px solid #c9c6ba; background: #fff; color: var(--pe-tinta); border-radius: 8px; }
+.filtros .btn-check:checked + .btn { background: var(--pe-tinta); border-color: var(--pe-tinta); color: #fff; font-weight: 600; }
+
+/* Portada: si existe public/img/portada.webp se muestra detras del verde */
+.portada {
+  color: #fff;
+  background-color: var(--pe-verde);
+  background-image: linear-gradient(rgba(21, 77, 48, .82), rgba(21, 77, 48, .82)), url('/img/portada.webp');
+  background-size: cover;
+  background-position: center;
+}
+.portada label { color: #d8eedf; font-weight: 600; font-size: .875rem; }
+.portada-naranja { background-color: #8a3a0b; background-image: none; }
+
+/* Tarjetas de alimento */
+.tarjeta { background: #fff; border-radius: 12px; overflow: hidden; height: 100%; color: var(--pe-tinta);
+  text-decoration: none; display: flex; flex-direction: column;
+  box-shadow: 0 1px 2px rgba(28, 43, 34, .08), 0 2px 8px rgba(28, 43, 34, .06); transition: transform .15s; }
+a.tarjeta:hover { transform: translateY(-2px); color: var(--pe-tinta); }
+.tarjeta-imagen { position: relative; aspect-ratio: 1 / 1; background: #ece9df; }
+.img-alimento { width: 100%; height: 100%; object-fit: cover; display: block; }
+.marca-riesgo { position: absolute; top: 8px; left: 8px; background: var(--pe-naranja); color: #fff;
+  font-size: .72rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; }
+
+.panel { background: #fff; border: 1px solid var(--pe-borde); border-radius: 12px; padding: 1.25rem; }
+.texto-suave { color: var(--pe-gris); }
+
+/* Etiquetas de nivel */
+.badge-nivel { display: inline-block; font-size: .75rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; }
+.nivel-alta { background: var(--pe-verde); color: #fff; }
+.nivel-media { background: var(--pe-ambar-suave); color: var(--pe-ambar-texto); }
+.nivel-baja { background: #ececE8; color: #4a4f4c; }
+.riesgo-alto { background: #fbe1d3; color: #8a2e0b; }
+.riesgo-medio { background: #fdf0d9; color: #7a4b05; }
+
+/* Calendario de 12 meses */
+.calendario { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+@media (min-width: 768px) { .calendario { grid-template-columns: repeat(12, minmax(0, 1fr)); } }
+.mes { text-align: center; border-radius: 8px; padding: .5rem 0; font-size: .85rem; font-weight: 600; }
+.mes small { display: block; font-weight: 400; font-size: .7rem; }
+.mes-alta { background: var(--pe-verde); color: #fff; }
+.mes-media { background: var(--pe-ambar-suave); color: var(--pe-ambar-texto); }
+.mes-baja, .mes-sin { background: #ececE8; color: #4a4f4c; }
+.mes-actual { outline: 2px solid var(--pe-tinta); outline-offset: -2px; }
+
+.aviso-nino { background: var(--pe-naranja-suave); border: 1px solid #e8a77a; color: #7a3209; border-radius: 10px; }
+.aviso-nino a { color: #7a3209; font-weight: 600; }
+
+/* Administracion */
+.admin-menu a { display: block; padding: .6rem .75rem; border-radius: 8px; color: #fff; text-decoration: none; }
+.admin-menu a.activo { background: #fff; color: #163f2a; font-weight: 600; }
+.admin-lateral { background: #163f2a; color: #fff; border-radius: 12px; }
+
+/* Avisos flotantes */
+.avisos { position: fixed; right: 1rem; bottom: 1rem; z-index: 1080; display: flex; flex-direction: column; gap: .5rem; max-width: 360px; }
+.aviso { display: flex; gap: .75rem; align-items: flex-start; background: var(--pe-verde); color: #fff;
+  padding: .75rem 1rem; border-radius: 10px; box-shadow: 0 4px 16px rgba(0, 0, 0, .15); }
+.aviso-error { background: #9a2a0a; }
+
+.pie { background: #fff; border-top: 1px solid var(--pe-borde); color: var(--pe-gris); font-size: .85rem; padding: 1rem 0; margin-top: 2rem; }

@@ -68,7 +68,7 @@ public class TemporadaService {
                 .map(t -> {
                     Long alimentoId = t.getAlimento().getId();
                     PrecioReferencia p = precios.get(alimentoId);
-                    return new TemporadaConsultaResponse.Item(alimentoId, t.getAlimento().getNombre(),
+                    return new TemporadaConsultaResponse.Item(t.getId(), alimentoId, t.getAlimento().getNombre(),
                             t.getAlimento().getCategoria(), t.getAlimento().getImagenUrl(), t.getNivel(),
                             riesgo.get(alimentoId),
                             p == null ? null : p.getPrecioKg(), p == null ? null : p.getFuente(),

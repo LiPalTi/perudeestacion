@@ -1,0 +1,39 @@
+<header class="barra">
+  <nav class="container-xl d-flex flex-wrap align-items-center justify-content-between py-2" aria-label="Principal">
+    <a routerLink="/" class="marca" (click)="menuAbierto.set(false)">Perú de Estación</a>
+    <button type="button" class="btn btn-pe-outline d-lg-none" (click)="menuAbierto.set(!menuAbierto())"
+            [attr.aria-expanded]="menuAbierto()" aria-controls="menu-principal">Menú</button>
+    <div id="menu-principal" class="menu" [class.abierto]="menuAbierto()">
+      <a routerLink="/" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }" (click)="menuAbierto.set(false)">Temporada</a>
+      <a routerLink="/el-nino" routerLinkActive="activo" (click)="menuAbierto.set(false)">El Niño</a>
+      <a routerLink="/simulador" routerLinkActive="activo" (click)="menuAbierto.set(false)">Simulador</a>
+      <a routerLink="/apoyo" routerLinkActive="activo" (click)="menuAbierto.set(false)">Apoyo</a>
+      @if (auth.autenticado()) {
+        <a routerLink="/admin" routerLinkActive="activo" id="nav-admin" (click)="menuAbierto.set(false)">Administración</a>
+        <button type="button" class="btn btn-pe-outline btn-sm" id="btn-salir" (click)="salir()">Salir</button>
+      } @else {
+        <a routerLink="/login" class="btn btn-pe-outline btn-sm" id="nav-ingresar" (click)="menuAbierto.set(false)">Ingresar</a>
+      }
+    </div>
+  </nav>
+</header>
+
+<main>
+  <router-outlet />
+</main>
+
+<footer class="pie">
+  <div class="container-xl d-flex flex-wrap justify-content-between gap-2">
+    <span>Precios de referencia por kg. Fuente: SISAP-MIDAGRI. Alertas: ENFEN.</span>
+    <span>Perú de Estación · Proyecto académico UPN 2026</span>
+  </div>
+</footer>
+
+<div class="avisos" aria-live="polite">
+  @for (a of avisos.avisos(); track a.id) {
+    <div class="aviso" [class.aviso-error]="a.tipo === 'error'" role="status">
+      <span>{{ a.texto }}</span>
+      <button type="button" class="btn-close btn-close-white" aria-label="Cerrar aviso" (click)="avisos.cerrar(a.id)"></button>
+    </div>
+  }
+</div>
